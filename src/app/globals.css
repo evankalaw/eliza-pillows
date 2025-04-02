@@ -24,3 +24,107 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Border.css */
+.border-container {
+  position: relative;
+}
+
+.notched-border {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  bottom: 40px;
+  left: 40px;
+  mix-blend-mode: difference;
+  color: white;
+  pointer-events: none;
+  z-index: 10;
+  display: grid;
+  grid-template-areas:
+    "ctl top ctr"
+    "left content right"
+    "cbl bottom cbr";
+}
+
+/* Add this new class */
+.notched-border-no-offset {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Border sizes */
+.border-small {
+  grid-template-columns: 15px 1fr 15px;
+  grid-template-rows: 15px 1fr 15px;
+}
+
+.border-medium {
+  grid-template-columns: 20px 1fr 20px;
+  grid-template-rows: 20px 1fr 20px;
+}
+
+.border-large {
+  grid-template-columns: 30px 1fr 30px;
+  grid-template-rows: 30px 1fr 30px;
+}
+
+/* Corner elements */
+.corner {
+  display: flex;
+  overflow: visible;
+}
+
+.corner svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.corner-tl {
+  grid-area: ctl;
+}
+
+.corner-tr {
+  grid-area: ctr;
+}
+
+.corner-br {
+  grid-area: cbr;
+}
+
+.corner-bl {
+  grid-area: cbl;
+}
+
+/* Border lines */
+.border-line {
+  background-color: currentColor;
+}
+
+.border-line-top {
+  grid-area: top;
+  height: 1px;
+  align-self: start;
+}
+
+.border-line-right {
+  grid-area: right;
+  width: 1px;
+  height: 100%;
+  justify-self: end;
+}
+
+.border-line-bottom {
+  grid-area: bottom;
+  height: 1px;
+  align-self: end;
+}
+
+.border-line-left {
+  grid-area: left;
+  width: 1px;
+  height: 100%;
+}
