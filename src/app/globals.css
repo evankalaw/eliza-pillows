@@ -1,28 +1,19 @@
 @import "tailwindcss";
 
+/* Set dark theme colors as default */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --background: #000000; /* Dark background */
+  --foreground: #ededed; /* Light foreground */
+  /* Keep font variables if they are used elsewhere via Tailwind */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
+  /* Try setting background color directly */
+  background: #000000;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif; /* Consider updating if Geist is primary */
 }
 
 /* Border.css */
@@ -32,6 +23,7 @@ body {
 
 .notched-border {
   position: absolute;
+  /* Restore original 40px offset */
   top: 40px;
   right: 40px;
   bottom: 40px;
@@ -45,14 +37,6 @@ body {
     "ctl top ctr"
     "left content right"
     "cbl bottom cbr";
-}
-
-/* Add this new class */
-.notched-border-no-offset {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 }
 
 /* Border sizes */

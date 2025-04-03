@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { NotchedBorder } from "./components/NotchedBorder";
+import BorderWrappedComponent from "./components/BorderWrappedComponent";
+import PillowSiteNav from "./components/navcomponents/PillowSiteNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NotchedBorder className="h-full w-full" size="large">
-          {children}
-        </NotchedBorder>
+        <div className="h-screen w-screen">
+          <BorderWrappedComponent>
+            <PillowSiteNav />
+            <main className="h-full">{children}</main>
+          </BorderWrappedComponent>
+        </div>
       </body>
     </html>
   );
