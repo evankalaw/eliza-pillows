@@ -14,22 +14,27 @@ const voteOptions = [
   {
     id: 1,
     name: "Pillow 1",
+    pillowPath: "/BodyPillow.glb",
   },
   {
     id: 2,
     name: "Pillow 2",
+    pillowPath: "/BodyPillow.glb",
   },
   {
     id: 3,
     name: "Pillow 3",
+    pillowPath: "/BodyPillow.glb",
   },
   {
     id: 4,
     name: "Pillow 4",
+    pillowPath: "/BodyPillow.glb",
   },
   {
     id: 5,
     name: "Pillow 5",
+    pillowPath: "/BodyPillow.glb",
   },
 ];
 
@@ -39,6 +44,7 @@ export default function Vote() {
       id: option.id,
       selected: false,
       userVoted: false,
+      pillowPath: option.pillowPath,
     })),
   });
 
@@ -79,21 +85,21 @@ export default function Vote() {
           pagination={{ clickable: true }}
           className="w-full h-full"
           slidesPerView={1.5}
-          spaceBetween={50}
+          spaceBetween={10}
           centeredSlides={true}
           loop={true}
           speed={1500}
           effect="creative"
           creativeEffect={{
             prev: {
-              translate: ["-110%", 0, 0],
-              scale: 0.8,
+              translate: ["-100%", 0, 0],
+              scale: 0.9,
               shadow: true,
               opacity: 0.8,
             },
             next: {
-              translate: ["110%", 0, 0],
-              scale: 0.8,
+              translate: ["100%", 0, 0],
+              scale: 0.9,
               shadow: true,
               opacity: 0.8,
             },
@@ -111,12 +117,13 @@ export default function Vote() {
                   handleVoteAgainst(vote.id);
                   swiperRef.current?.slideNext();
                 }}
+                pillowPath={vote.pillowPath}
               />
             </SwiperSlide>
           ))}
           <SwiperSlide className="w-full h-full">
             {votesCompleted ? (
-              <div>you completed the votes pare</div>
+              <div>you completed the votes</div>
             ) : (
               <div>not done</div>
             )}
