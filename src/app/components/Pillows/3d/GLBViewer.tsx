@@ -14,6 +14,7 @@ interface GLBViewerProps {
     y?: number;
     z?: number;
   };
+  viewportWidth?: number; // Add viewportWidth prop
 }
 
 const GLBViewerComponent: React.FC<GLBViewerProps> = ({
@@ -23,6 +24,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
   backgroundColor = "#f0f0f0",
   autoRotate = true,
   initialRotation = { x: 0, y: 0, z: 0 },
+  viewportWidth = 0, // Default value
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -114,8 +116,12 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
         const fov = camera.fov * (Math.PI / 180);
         const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
 
-        // Position camera closer for tighter rotation
-        camera.position.z = cameraDistance * 1.2;
+        // Position camera closer for tighter rotation based on viewport width
+        // Use a smaller multiplier for mobile (e.g., < 768px) to make it smaller
+        // Use a larger multiplier for desktop (e.g., >= 768px)
+        const distanceMultiplier =
+          viewportWidth > 0 && viewportWidth < 768 ? 1.4 : 1.0;
+        camera.position.z = cameraDistance * distanceMultiplier;
         controls.update();
 
         // Handle animations
@@ -255,7 +261,15 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
 
       // mountRef.current = null // Explicitly nullify the ref? Maybe not necessary if component unmounts
     };
-  }, [modelPath, backgroundColor, autoRotate, initialRotation, width, height]); // Add width and height to dependencies
+  }, [
+    modelPath,
+    backgroundColor,
+    autoRotate,
+    initialRotation,
+    width,
+    height,
+    viewportWidth,
+  ]); // Add viewportWidth to dependencies
 
   return (
     <div

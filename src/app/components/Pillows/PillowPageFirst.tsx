@@ -76,7 +76,7 @@ export default function PillowPageFirst() {
               alt="Visual Spacer"
               width={150}
               height={100}
-              className="mx-auto w-auto h-[10px] md:h-[15px]"
+              className="mx-auto w-auto h-[20px] md:h-[30px]"
             />
             <div className="flex flex-col gap-[17px]">
               <div className="uppercase text-[28px] sm:text-[44px] md:text-[60px] lg:text-[72px] xl:text-[90px] leading-none tracking-[.144em]">
@@ -90,7 +90,7 @@ export default function PillowPageFirst() {
 
           <div className="flex-1 flex flex-col items-center justify-center relative min-h-[200px]">
             <div
-              className="relative mx-auto w-full h-full flex justify-center items-center"
+              className="relative mx-auto w-full max-w-xl lg:max-w-full h-full flex justify-center items-center"
               style={{
                 overflow: "hidden",
               }}
@@ -103,12 +103,11 @@ export default function PillowPageFirst() {
                 height="100%"
                 backgroundColor="transparent"
                 initialRotation={initialRotation}
+                viewportWidth={viewportWidth}
               />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 {/* Disable pointer events on overlay */}
-                {/* Removed emoji */}
-                {/* Assuming HexagonButton component exists */}
 
                 <HexagonButton
                   className="text-white uppercase text-xl pointer-events-auto" // Enable pointer events only on the button
@@ -118,16 +117,6 @@ export default function PillowPageFirst() {
                 >
                   Join Waitli$t
                 </HexagonButton>
-
-                {/* Placeholder Button - Remove when HexagonButton is available */}
-                {/* <button
-                  className="text-white uppercase text-xl pointer-events-auto border p-2 rounded"
-                  onClick={() => {
-                    setModalOpen(true);
-                  }}
-                >
-                  Join Waitli$t (TEMP)
-                </button> */}
               </div>
             </div>
           </div>

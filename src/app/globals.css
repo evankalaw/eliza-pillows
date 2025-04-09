@@ -7,6 +7,8 @@
   /* Keep font variables if they are used elsewhere via Tailwind */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-ptserif: var(--font-ptserif);
+  --font-cinzel: var(--font-cinzel);
   --color-studios-orange: #FF5800;
 }
 
