@@ -108,8 +108,6 @@ export default function PillowPageFirst() {
 
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 {/* Disable pointer events on overlay */}
-                {/* Removed emoji */}
-                {/* Assuming HexagonButton component exists */}
 
                 <HexagonButton
                   className="text-white uppercase text-xl pointer-events-auto" // Enable pointer events only on the button
@@ -119,16 +117,6 @@ export default function PillowPageFirst() {
                 >
                   Join Waitli$t
                 </HexagonButton>
-
-                {/* Placeholder Button - Remove when HexagonButton is available */}
-                {/* <button
-                  className="text-white uppercase text-xl pointer-events-auto border p-2 rounded"
-                  onClick={() => {
-                    setModalOpen(true);
-                  }}
-                >
-                  Join Waitli$t (TEMP)
-                </button> */}
               </div>
             </div>
           </div>

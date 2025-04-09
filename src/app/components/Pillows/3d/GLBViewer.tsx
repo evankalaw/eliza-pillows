@@ -120,7 +120,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
         // Use a smaller multiplier for mobile (e.g., < 768px) to make it smaller
         // Use a larger multiplier for desktop (e.g., >= 768px)
         const distanceMultiplier =
-          viewportWidth > 0 && viewportWidth < 768 ? 1.2 : 1.0;
+          viewportWidth > 0 && viewportWidth < 768 ? 1.4 : 1.0;
         camera.position.z = cameraDistance * distanceMultiplier;
         controls.update();
 
