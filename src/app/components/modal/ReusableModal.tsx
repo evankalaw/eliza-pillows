@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { NotchedBorder } from "../NotchedBorder"; // Adjust path as needed
+import { NotchedBorder } from "../borders/NotchedBorder"; // Adjust path as needed
 
 interface ReusableModalProps {
   open: boolean;
