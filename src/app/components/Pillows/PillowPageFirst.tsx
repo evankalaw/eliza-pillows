@@ -90,7 +90,7 @@ export default function PillowPageFirst() {
 
           <div className="flex-1 flex flex-col items-center justify-center relative min-h-[200px]">
             <div
-              className="relative mx-auto w-full max-w-3xl h-full flex justify-center items-center"
+              className="relative mx-auto w-full h-full flex justify-center items-center"
               style={{
                 overflow: "hidden",
               }}
