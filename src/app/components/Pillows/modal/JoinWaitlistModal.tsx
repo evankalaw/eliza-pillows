@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import ReusableModal from "../../modal/ReusableModal"; // Import the reusable modal
-// import { HexagonBorder } from "@/components/border/HexagonBorder"; // Assuming path, adjust if needed - COMMENTED OUT
-// import HexagonButton from "@/components/button/HexagonButton"; // Assuming path, adjust if needed - COMMENTED OUT
-// import useMailchimpSubscribe from "@/hooks/useMailchimpSubscribe"; // Assuming path, adjust if needed - COMMENTED OUT
+import useMailchimpSubscribe from "@/app/hooks/useMailchimpSubscribe";
+import HexagonButton from "../../HexagonButton";
 
 interface JoinWaitlistModalProps {
   open: boolean;
@@ -15,42 +14,15 @@ export default function JoinWaitlistModal({
   open,
   onClose,
 }: JoinWaitlistModalProps) {
-  // Remove isAnimating and isVisible state - handled by ReusableModal
-  // const [isAnimating, setIsAnimating] = useState(false);
-  // const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState("");
 
-  // --- Mock Mailchimp Hook --- (Replace with actual import when available)
-  const useMailchimpSubscribe = () => ({
-    mutateAsync: async (email: string) => {
-      console.log("Mock Mailchimp Submit:", email);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-      // Simulate success/error
-      if (email.includes("error"))
-        throw new Error("Mock error: Invalid email.");
-      return { success: true };
-    },
-    isPending: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-  });
   const { mutateAsync, isPending, isSuccess, isError, error } =
     useMailchimpSubscribe();
-  // --- End Mock Mailchimp Hook ---
-
-  // Remove useEffect managing isAnimating/isVisible - handled by ReusableModal
-  // useEffect(() => { ... }, [open]);
-
-  // Remove custom handleClose - use onClose directly passed to ReusableModal
-  // const handleClose = () => { ... };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await mutateAsync(email);
-      // Only clear email on successful submission (or handle based on actual hook behavior)
-      // setEmail(""); // You might want success state handling before clearing
     } catch (submitError) {
       console.error("Submission Error:", submitError);
     }
@@ -63,17 +35,12 @@ export default function JoinWaitlistModal({
     }
   }, [isSuccess]);
 
-  // Remove conditional rendering based on isVisible - handled by ReusableModal
-  // if (!isVisible && !open) return null;
-
   return (
     // Use ReusableModal component
     <ReusableModal
       open={open}
       onClose={onClose}
-      // Pass styles for the modal content container (HexagonBorder)
       borderClassName="max-w-md w-full bg-black"
-      // Keep noOffset true if the HexagonBorder should not have its default offset
       noOffset={true}
     >
       {/* Inner Content Styling */}
@@ -133,25 +100,13 @@ export default function JoinWaitlistModal({
               </p>
             )}
             <div className="flex justify-center">
-              {/* Placeholder Button - Remove when HexagonButton is available */}
-              {!isSuccess ? (
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="bg-white text-black px-4 py-2 rounded-md cursor-pointer disabled:opacity-50"
-                >
-                  {isPending ? "Submitting..." : "Submit"}
-                </button>
-              ) : (
-                // Use the onClose passed from props for the internal close button
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="bg-white text-black px-4 py-2 rounded-md cursor-pointer"
-                >
-                  Close
-                </button>
-              )}
+              <HexagonButton
+                type="submit"
+                disabled={isPending}
+                className="bg-white text-black px-4 py-2 rounded-md cursor-pointer disabled:opacity-50"
+              >
+                {isPending ? "Submitting..." : "Submit"}
+              </HexagonButton>
             </div>
           </form>
         </div>
