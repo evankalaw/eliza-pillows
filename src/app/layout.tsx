@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BorderWrappedComponent from "./components/BorderWrappedComponent";
-import PillowSiteNav from "./components/navcomponents/PillowSiteNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +28,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="h-screen w-screen">
-          <BorderWrappedComponent>
+          {/* <BorderWrappedComponent>
             <PillowSiteNav />
             <main className="h-full">{children}</main>
-          </BorderWrappedComponent>
+          </BorderWrappedComponent> */}
+          <main className="h-full">{children}</main>
         </div>
       </body>
     </html>

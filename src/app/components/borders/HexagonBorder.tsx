@@ -1,14 +1,13 @@
-// Border.jsx - React Component
 import React from "react";
 
-interface NotchedBorderProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HexagonBorderProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   size?: "small" | "medium" | "large";
   noOffset?: boolean;
 }
 
-export const NotchedBorder: React.FC<NotchedBorderProps> = ({
+export const HexagonBorder: React.FC<HexagonBorderProps> = ({
   children,
   className = "",
   size = "medium",
@@ -31,7 +30,7 @@ export const NotchedBorder: React.FC<NotchedBorderProps> = ({
           >
             <path
               vectorEffect="non-scaling-stroke"
-              d="M0 29.5H13L29.5 13V0"
+              d="M0 30 L30 0"
               stroke="currentColor"
             />
           </svg>
@@ -46,7 +45,7 @@ export const NotchedBorder: React.FC<NotchedBorderProps> = ({
           >
             <path
               vectorEffect="non-scaling-stroke"
-              d="M30 29.5H17L0.5 13V0"
+              d="M30 30 L0 0"
               stroke="currentColor"
             />
           </svg>
@@ -61,7 +60,7 @@ export const NotchedBorder: React.FC<NotchedBorderProps> = ({
           >
             <path
               vectorEffect="non-scaling-stroke"
-              d="M30 0.5H17L0.5 17V30"
+              d="M30 0 L0 30"
               stroke="currentColor"
             />
           </svg>
@@ -76,7 +75,7 @@ export const NotchedBorder: React.FC<NotchedBorderProps> = ({
           >
             <path
               vectorEffect="non-scaling-stroke"
-              d="M0 0.5H13L29.5 17V30"
+              d="M0 0 L30 30"
               stroke="currentColor"
             />
           </svg>
