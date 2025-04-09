@@ -5,13 +5,10 @@ export async function POST(request: NextRequest) {
   const { email } = await request.json();
 
   try {
-    const response = await mailchimp.lists.addListMember(
-      process.env.MAILCHIMP_LIST_ID!,
-      {
-        email_address: email,
-        status: "pending",
-      }
-    );
+    await mailchimp.lists.addListMember(process.env.MAILCHIMP_LIST_ID!, {
+      email_address: email,
+      status: "pending",
+    });
 
     return NextResponse.json({ message: "Subscription successful" });
   } catch (error: unknown) {
