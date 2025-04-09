@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { NotchedBorder } from "../borders/NotchedBorder"; // Adjust path as needed
+import { HexagonBorder } from "../borders/HexagonBorder";
 
 interface ReusableModalProps {
   open: boolean;
@@ -66,7 +66,7 @@ export default function ReusableModal({
       />
 
       {/* Modal content using NotchedBorder - apply transition too */}
-      <NotchedBorder
+      <HexagonBorder
         className={`relative z-10 max-w-3xl w-full transition-all duration-300 ease-out ${borderClassName} ${
           isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
@@ -76,7 +76,7 @@ export default function ReusableModal({
         aria-modal="true"
       >
         {children}
-      </NotchedBorder>
+      </HexagonBorder>
 
       {/* Close Button - apply transition too */}
       <div
