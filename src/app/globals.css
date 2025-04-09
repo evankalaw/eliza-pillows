@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 /* Set dark theme colors as default */
-:root {
+@theme inline {
   --background: #000000; /* Dark background */
   --foreground: #ededed; /* Light foreground */
   /* Keep font variables if they are used elsewhere via Tailwind */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-studios-orange: #FF5800;
 }
 
 body {
