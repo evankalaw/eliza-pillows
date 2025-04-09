@@ -51,37 +51,27 @@ export default function JoinWaitlistModal({
           </h2>
         </div>
         <div className="flex flex-col gap-4 mt-4 text-center">
-          {!isSuccess && (
-            <p className="text-[24px] sm:text-[24px]">
-              Enter your information to get notified of future drops.
-            </p>
-          )}
-          {isSuccess && (
-            <p className="text-green-500 text-[20px] sm:text-[24px]">
-              You&apos;ve successfully signed up to receive updates.
-            </p>
-          )}
+          <p className="text-[24px] sm:text-[24px]">
+            Enter your information to get notified of future drops.
+          </p>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            {!isSuccess && (
-              <input
-                type="email"
-                placeholder="Email"
-                required
-                className="bg-black border-1 border-white px-4 py-2 text-center outline-none text-[16px] sm:text-[18px]"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isPending}
-              />
-            )}
-            {!isSuccess && (
-              <p className="text-[20px] sm:text-[24px]">
-                By submitting your email, you&apos;re giving Eliza permission to
-                send you emails.
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              className="bg-black border-1 border-white px-4 py-2 text-center outline-none text-[16px] sm:text-[18px]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isPending}
+            />
+            {isSuccess && (
+              <p className="text-studios-orange text-[20px] sm:text-[24px]">
+                You&apos;ve successfully signed up to receive updates.
               </p>
             )}
             {isError && (
               <p
-                className={`text-[14px] sm:text-[16px] ${
+                className={`text-[20px] sm:text-[24px] ${
                   // Check if error is an object and has status 400 for yellow, otherwise red
                   typeof error === "object" &&
                   error !== null &&
@@ -99,6 +89,10 @@ export default function JoinWaitlistModal({
                   : String(error)}
               </p>
             )}
+            <p className="text-[20px] sm:text-[24px]">
+              By submitting your email, you&apos;re giving Eliza permission to
+              send you emails.
+            </p>
             <div className="flex justify-center">
               <HexagonButton
                 type="submit"

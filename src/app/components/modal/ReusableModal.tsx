@@ -80,12 +80,12 @@ export default function ReusableModal({
 
       {/* Close Button - apply transition too */}
       <div
-        className={`cursor-pointer border-1 border-white p-2 rounded-full bg-black relative z-20 mt-4 transition-opacity duration-300 ease-out ${
+        className={`cursor-pointer border-1 transition-all duration-300 ease-out hover:bg-white hover:text-black border-white p-2 bg-black relative z-20 mt-4 ${
           isVisible ? "opacity-100" : "opacity-0"
-        }`}
+        } w-10 h-10 flex items-center justify-center`}
         onClick={onClose}
       >
-        xxx
+        <span className="">X</span>
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ export default function PillowPageFirst() {
               alt="Visual Spacer"
               width={150}
               height={100}
-              className="mx-auto w-auto h-[20px] md:h-[30px]"
+              className="mx-auto w-auto h-[10px] md:h-[15px]"
             />
             <div className="flex flex-col gap-[17px]">
               <div className="uppercase text-[28px] sm:text-[44px] md:text-[60px] lg:text-[72px] xl:text-[90px] leading-none tracking-[.144em]">
@@ -90,7 +90,7 @@ export default function PillowPageFirst() {
 
           <div className="flex-1 flex flex-col items-center justify-center relative min-h-[200px]">
             <div
-              className="relative mx-auto w-full max-w-3xl h-full flex justify-center items-center"
+              className="relative mx-auto w-full h-full flex justify-center items-center"
               style={{
                 overflow: "hidden",
               }}

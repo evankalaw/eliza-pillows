@@ -78,7 +78,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.autoRotate = autoRotate;
-    controls.autoRotateSpeed = 1;
+    controls.autoRotateSpeed = 3;
 
     // Disable user interactions
     controls.enableRotate = false;
