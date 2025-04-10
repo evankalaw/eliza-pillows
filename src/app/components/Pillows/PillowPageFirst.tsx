@@ -32,7 +32,7 @@ export default function PillowPageFirst() {
     if (viewportWidth === 0) {
       return { x: 1.6, y: 0, z: 0 };
     }
-    if (viewportWidth >= 768) {
+    if (viewportWidth >= 1024) {
       return {
         x: 0,
         y: 1.5,
@@ -48,9 +48,6 @@ export default function PillowPageFirst() {
 
   return (
     <div className="h-full w-full bg-black font-cinzel text-white relative overflow-hidden">
-      <div className="absolute left-1/2 bottom-[0vh] -translate-x-1/2 w-[140%] h-[10vh] bg-[#808FFF80] rounded-[50%] z-0 blur-[70px]"></div>
-      <div className="absolute left-1/2 bottom-[-2.5vh] -translate-x-1/2 w-[120%] h-[5vh] bg-[#EB7BFFBF] rounded-[50%] z-0 blur-[40px]"></div>
-
       <NotchedBorder className="h-full w-full" size="large">
         <div
           className="absolute top-0 left-0 right-0 h-1/3 z-0"
@@ -63,12 +60,23 @@ export default function PillowPageFirst() {
           }}
         ></div>
 
+        {/* Gradient Background */}
+        <div
+          className="absolute bottom-[-55.5vh] left-0 right-0 h-full z-0 blur-md opacity-90"
+          style={{
+            backgroundImage: "url('/Gradient.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "bottom center",
+            backgroundRepeat: "no-repeat",
+          }}
+        ></div>
+
         <div className="flex flex-col h-full w-full py-12 z-10 relative text-center">
           <div className="flex flex-col items-center justify-start relative gap-4 px-4 pt-4 pb-4">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[15vh] bg-[#808FFF80] rounded-[50%] opacity-30  z-[-1] blur-[40px]"></div>
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[5vh] bg-[#EB7BFFBF] rounded-[50%] opacity-30  z-[-1] blur-[40px]"></div>
 
-            <h2 className="uppercase text-[16px] md:text-[24px] lg:text-[28px] font-bold tracking-[.144em]">
+            <h2 className="uppercase text-[clamp(18px,2.5vw,28px)] font-bold tracking-[.144em]">
               You ain&apos;t dreaming
             </h2>
             <Image
@@ -76,13 +84,13 @@ export default function PillowPageFirst() {
               alt="Visual Spacer"
               width={150}
               height={100}
-              className="mx-auto w-auto h-[15px]"
+              className="mx-auto"
             />
             <div className="flex flex-col gap-[17px]">
-              <div className="uppercase text-[28px] sm:text-[44px] md:text-[60px] lg:text-[72px] xl:text-[90px] leading-none tracking-[.144em]">
+              <div className="uppercase text-[clamp(30px,6vw,100px)] leading-none tracking-[.144em]">
                 The Sleeper Agent
               </div>
-              <div className="uppercase text-[16px] md:text-[20px] lg:text-[24px] tracking-[.28em] font-bold">
+              <div className="uppercase text-[clamp(16px,2vw,24px)] tracking-[.28em] font-bold">
                 Collection
               </div>
             </div>
@@ -106,27 +114,30 @@ export default function PillowPageFirst() {
                 viewportWidth={viewportWidth}
               />
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
                 {/* Disable pointer events on overlay */}
 
-                <HexagonButton
-                  className="text-white uppercase text-xl pointer-events-auto" // Enable pointer events only on the button
-                  onClick={() => {
-                    setModalOpen(true);
-                  }}
-                >
-                  Join Waitli$t
-                </HexagonButton>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="text-[clamp(30px,4vw,50px)]">🤑</div>
+                  <HexagonButton
+                    className="text-white uppercase text-[clamp(16px,2vw,24px)]"
+                    onClick={() => {
+                      setModalOpen(true);
+                    }}
+                  >
+                    Join Waitli$t
+                  </HexagonButton>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col items-center justify-end px-4 py-4 gap-3">
             <div className="flex flex-col pb-8 md:pb-12 gap-3">
-              <div className="uppercase text-[12px] sm:text-[16px] md:text-[24px] lg:text-[28px] font-ptserif tracking-[.1em]">
+              <div className="uppercase text-[clamp(14px,2.5vw,28px)] font-ptserif tracking-[.1em]">
                 We&apos;ll be together soon
               </div>
-              <div className="uppercase text-[12px] sm:text-[16px] md:text-[24px] lg:text-[28px] tracking-[.28em]">
+              <div className="uppercase text-[clamp(14px,2.5vw,28px)] tracking-[.28em]">
                 ELIZASLEEPSWITHYOU.COM
               </div>
             </div>
@@ -140,7 +151,7 @@ export default function PillowPageFirst() {
                 quality={100}
                 unoptimized={true}
               />
-              <div className="uppercase text-[10px] sm:text-[12px] tracking-[.2em]">
+              <div className="uppercase text-[clamp(10px,1.2vw,12px)] tracking-[.2em]">
                 PRESENTS
               </div>
             </div>

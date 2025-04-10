@@ -3,7 +3,7 @@ import React from "react";
 interface HexagonBorderProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
-  size?: "small" | "medium" | "large";
+  size?: "xsmall" | "small" | "medium" | "large";
   noOffset?: boolean;
 }
 

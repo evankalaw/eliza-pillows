@@ -47,7 +47,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     // If background is meant to be transparent, scene.background remains null (default)
 
     const camera = new THREE.PerspectiveCamera(
-      60, // Narrower FOV for tighter framing
+      50, // Narrower FOV for tighter framing
       currentMount.clientWidth / currentMount.clientHeight,
       0.1,
       1000
@@ -151,10 +151,10 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
         const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
 
         // Position camera closer on smaller viewports for better visibility
-        // Use a smaller multiplier for mobile (< 768px) to make the model appear larger relative to the viewport
-        // Use a larger multiplier for desktop (>= 768px)
+        // Use a smaller multiplier for mobile (< 1024px) to make the model appear larger relative to the viewport
+        // Use a larger multiplier for desktop (>= 1024px)
         const distanceMultiplier =
-          viewportWidth > 0 && viewportWidth < 768 ? 1.4 : 1.0;
+          viewportWidth > 0 && viewportWidth < 1024 ? 1.4 : 1.0;
         camera.position.z = cameraDistance * distanceMultiplier;
         controls.update(); // Apply camera changes
 
