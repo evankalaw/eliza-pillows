@@ -14,7 +14,7 @@ interface GLBViewerProps {
     y?: number;
     z?: number;
   };
-  viewportWidth?: number; // Add viewportWidth prop
+  viewportWidth?: number;
 }
 
 const GLBViewerComponent: React.FC<GLBViewerProps> = ({
@@ -24,7 +24,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
   backgroundColor = "#f0f0f0",
   autoRotate = true,
   initialRotation = { x: 0, y: 0, z: 0 },
-  viewportWidth = 0, // Default value
+  viewportWidth = 0,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,17 +37,15 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     // Capture the current mount point to avoid issues with ref updates during cleanup
     const currentMount = mountRef.current;
 
-    console.log("Setting up GLBViewer for:", modelPath); // Debug log
+    console.log("Setting up GLBViewer for:", modelPath);
 
-    // Scene setup
     const scene = new THREE.Scene();
     // If backgroundColor is null or 'transparent', don't set a background color
     if (backgroundColor && backgroundColor !== "transparent") {
       scene.background = new THREE.Color(backgroundColor);
     }
-    // If background is meant to be transparent, scene.background remains null
+    // If background is meant to be transparent, scene.background remains null (default)
 
-    // Camera setup
     const camera = new THREE.PerspectiveCamera(
       60, // Narrower FOV for tighter framing
       currentMount.clientWidth / currentMount.clientHeight,
@@ -56,26 +54,51 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     );
     camera.position.z = 5;
 
-    // Renderer setup with alpha enabled for transparency
+    // Renderer setup with alpha support for transparency
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true, // Enable transparency
+      alpha: true, // Enable transparency in the canvas
     });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    // Use the modern approach for color management
+    // Use SRGBColorSpace for accurate color representation
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
+    // Use ACES Filmic tone mapping for better contrast and a cinematic look
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1; // Adjust exposure if needed
     currentMount.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.02); // Low ambient light to emphasize spotlight
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 1, 0);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.05); // Subtle directional light for fill
+    directionalLight.position.set(0, 1, 1);
     scene.add(directionalLight);
 
-    // Controls setup (only used for auto-rotation, no user interaction)
+    // Spotlight to highlight the model
+    const spotlight = new THREE.SpotLight(0xffffff, 120); // High intensity for dramatic effect
+    spotlight.position.set(3, 5, 4); // Initial position, updated dynamically based on camera
+    spotlight.angle = Math.PI / 15; // Narrow cone
+    spotlight.penumbra = 0.3; // Soft edge
+    spotlight.decay = 2.5; // Realistic light falloff
+    spotlight.castShadow = true;
+    // Configure shadow map properties
+    spotlight.shadow.mapSize.width = 1024;
+    spotlight.shadow.mapSize.height = 1024;
+    spotlight.shadow.camera.near = 1;
+    spotlight.shadow.camera.far = 20;
+    spotlight.shadow.focus = 1; // Sharpens shadows
+
+    scene.add(spotlight);
+
+    // Optional: Spotlight helper for visualizing the light cone during debugging
+    // const spotLightHelper = new THREE.SpotLightHelper(spotlight);
+    // scene.add(spotLightHelper);
+
+    // OrbitControls for auto-rotation (user interaction is disabled)
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -87,51 +110,72 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     controls.enablePan = false;
     controls.enableZoom = false;
 
-    // Model loading
+    // Model Loading
     let mixer: THREE.AnimationMixer | null = null;
     const loader = new GLTFLoader();
-    let modelScene: THREE.Group | null = null; // Keep a reference to the loaded scene
+    let modelScene: THREE.Group | null = null; // Reference to the loaded GLTF scene
+    // Dedicated object for the spotlight to target, allows independent movement/positioning
+    const spotlightTarget = new THREE.Object3D();
 
     loader.load(
       modelPath,
       (gltf) => {
-        modelScene = gltf.scene; // Store reference
-        // Center model
+        modelScene = gltf.scene; // Store reference to the loaded scene
+        // Calculate bounding box to center and scale the model
         const box = new THREE.Box3().setFromObject(modelScene);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
-        // Reset model position to center with tighter focus
+        // Center the model in the scene, slightly raised
         modelScene.position.x = -center.x;
         modelScene.position.y = -center.y + 0.25;
         modelScene.position.z = -center.z;
 
-        // Apply initial rotation (in radians)
+        // Ensure all meshes within the model cast shadows
+        modelScene.traverse((node) => {
+          if (node instanceof THREE.Mesh) {
+            node.castShadow = true;
+            // Optionally, enable receiveShadow if the model should have shadows cast onto it
+            // node.receiveShadow = true;
+          }
+        });
+
+        // Apply initial rotation if specified (radians)
         modelScene.rotation.x = initialRotation.x || 0;
         modelScene.rotation.y = initialRotation.y || 0;
         modelScene.rotation.z = initialRotation.z || 0;
 
-        // Adjust camera position for tighter focus
+        // Adjust camera distance based on model size for a tight fit
         const maxDim = Math.max(size.x, size.y, size.z);
         const fov = camera.fov * (Math.PI / 180);
         const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
 
-        // Position camera closer for tighter rotation based on viewport width
-        // Use a smaller multiplier for mobile (e.g., < 768px) to make it smaller
-        // Use a larger multiplier for desktop (e.g., >= 768px)
+        // Position camera closer on smaller viewports for better visibility
+        // Use a smaller multiplier for mobile (< 768px) to make the model appear larger relative to the viewport
+        // Use a larger multiplier for desktop (>= 768px)
         const distanceMultiplier =
           viewportWidth > 0 && viewportWidth < 768 ? 1.4 : 1.0;
         camera.position.z = cameraDistance * distanceMultiplier;
-        controls.update();
+        controls.update(); // Apply camera changes
 
-        // Handle animations
+        // Position the spotlight target at the center of the model (slightly elevated)
+        // The spotlight itself will point towards this object
+        spotlightTarget.position.set(
+          modelScene.position.x,
+          modelScene.position.y + size.y / 2, // Target slightly above the base center
+          modelScene.position.z
+        );
+        scene.add(spotlightTarget); // Add the target to the scene
+        spotlight.target = spotlightTarget; // Make the spotlight track the target object
+
+        // Set up animation playback if the model has animations
         if (gltf.animations && gltf.animations.length) {
-          mixer = new THREE.AnimationMixer(modelScene); // Use modelScene
-          const action = mixer.clipAction(gltf.animations[0]);
+          mixer = new THREE.AnimationMixer(modelScene); // Animation mixer needs the scene root
+          const action = mixer.clipAction(gltf.animations[0]); // Play the first animation
           action.play();
         }
 
-        scene.add(modelScene); // Add modelScene
+        scene.add(modelScene); // Add the fully configured model to the scene
         setLoading(false);
       },
       (xhr) => {
@@ -144,28 +188,47 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
       }
     );
 
-    // Animation loop
+    // Animation Loop
     const clock = new THREE.Clock();
 
     const animate = () => {
-      // Check if the component is still mounted before animating
+      // Ensure component is still mounted before proceeding
       if (!mountRef.current) return;
-      requestAnimationFrame(animate); // Request next frame
+      requestAnimationFrame(animate);
 
-      controls.update();
+      controls.update(); // Required for damping and auto-rotation
 
+      // Dynamically update spotlight position to follow the camera
+      const cameraWorldPos = new THREE.Vector3();
+      camera.getWorldPosition(cameraWorldPos);
+      const targetPosition = spotlightTarget.position;
+      // Calculate direction from target to camera
+      const direction = new THREE.Vector3()
+        .subVectors(cameraWorldPos, targetPosition)
+        .normalize();
+      const spotlightDistance = 8; // Distance of the spotlight source from the target
+      // Position the spotlight along the direction vector
+      const desiredSpotlightPos = targetPosition
+        .clone()
+        .add(direction.multiplyScalar(spotlightDistance));
+      spotlight.position.copy(desiredSpotlightPos);
+
+      // Update animation mixer if animations are present
       if (mixer) {
         mixer.update(clock.getDelta());
       }
 
+      // Update spotlight helper if used for debugging
+      // spotLightHelper.update();
+
       renderer.render(scene, camera);
     };
 
-    const animationFrameId = requestAnimationFrame(animate); // Store animation frame id
+    const animationFrameId = requestAnimationFrame(animate); // Store the request ID for cancellation
 
-    // Handle window resize
+    // Handle window resize events to keep the viewport correct
     const handleResize = () => {
-      // Check if the component is still mounted
+      // Ensure component is still mounted
       if (!mountRef.current || !currentMount) return;
 
       const width = currentMount.clientWidth;
@@ -178,40 +241,40 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup function
+    // Cleanup function: Called when the component unmounts
     return () => {
-      console.log("Cleaning up GLBViewer for:", modelPath); // Debug log
-      cancelAnimationFrame(animationFrameId); // Stop animation loop
+      console.log("Cleaning up GLBViewer for:", modelPath);
+      cancelAnimationFrame(animationFrameId); // Stop the animation loop
       window.removeEventListener("resize", handleResize);
 
-      // Dispose controls
+      // Dispose OrbitControls
       controls.dispose();
 
-      // Dispose scene resources: Geometries, Materials, Textures in the model
+      // Dispose Three.js resources to prevent memory leaks
       if (modelScene) {
         modelScene.traverse((object) => {
           if (object instanceof THREE.Mesh) {
+            // Dispose geometries
             if (object.geometry) {
-              console.log("Disposing geometry:", object.geometry.uuid);
               object.geometry.dispose();
             }
+            // Dispose materials and their textures
             if (object.material) {
-              // If material is an array, dispose each one
               if (Array.isArray(object.material)) {
+                // Handle multi-materials
                 object.material.forEach((material) => {
-                  console.log("Disposing material:", material.uuid);
-                  // Also dispose textures if they exist
+                  // Dispose textures associated with the material
                   if (material.map) material.map.dispose();
                   if (material.lightMap) material.lightMap.dispose();
                   if (material.bumpMap) material.bumpMap.dispose();
                   if (material.normalMap) material.normalMap.dispose();
                   if (material.specularMap) material.specularMap.dispose();
                   if (material.envMap) material.envMap.dispose();
-                  material.dispose();
+                  material.dispose(); // Dispose the material itself
                 });
               } else {
-                console.log("Disposing material:", object.material.uuid);
-                // Also dispose textures if they exist
+                // Handle single material
+                // Dispose textures associated with the material
                 if (object.material.map) object.material.map.dispose();
                 if (object.material.lightMap)
                   object.material.lightMap.dispose();
@@ -221,45 +284,50 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
                 if (object.material.specularMap)
                   object.material.specularMap.dispose();
                 if (object.material.envMap) object.material.envMap.dispose();
-                object.material.dispose();
+                object.material.dispose(); // Dispose the material itself
               }
             }
           }
         });
-        // Remove the model itself after dealing with its contents
+        // Remove the model from the scene after disposing its contents
         scene.remove(modelScene);
       }
 
-      // Dispose scene lights etc. (Ensure scene still exists)
-      // Collect lights first to avoid modifying scene during traversal
+      // Dispose lights and other scene objects
       if (scene) {
+        // Collect lights first to avoid modifying the scene during traversal
         const lightsToRemove: THREE.Light[] = [];
         scene.traverse((object) => {
           if (object instanceof THREE.Light) {
             lightsToRemove.push(object);
           }
-          // Could add disposal for other scene objects here if needed
+          // Add other object types here if necessary (e.g., helpers)
         });
         lightsToRemove.forEach((light) => scene.remove(light));
-        // Lights don't typically have a .dispose() method unless custom
+        // Note: Standard lights don't typically have a .dispose() method
       }
 
-      // Scene.clear() might be redundant/problematic if we manually remove
+      // Remove spotlight and its target object
+      scene.remove(spotlight);
+      if (spotlight.target) {
+        scene.remove(spotlight.target); // Important: remove the Object3D target
+      }
+      // Remove spotlight helper if it was added
+      // scene.remove(spotLightHelper);
+
+      // Avoid calling scene.clear() as manual disposal is more thorough
       // scene.clear();
 
-      // Dispose renderer
+      // Dispose the WebGLRenderer resources
       renderer.dispose();
-      console.log("Disposed renderer context:", renderer.info.memory);
 
-      // Remove canvas from DOM
+      // Remove the canvas element from the DOM
       if (currentMount && renderer.domElement.parentNode === currentMount) {
-        console.log("Removing canvas from mount point.");
         currentMount.removeChild(renderer.domElement);
-      } else {
-        console.log("Canvas already removed or mount point mismatch.");
       }
 
-      // mountRef.current = null // Explicitly nullify the ref? Maybe not necessary if component unmounts
+      // Explicitly nullifying mountRef.current might not be necessary
+      // mountRef.current = null
     };
   }, [
     modelPath,
@@ -268,8 +336,8 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     initialRotation,
     width,
     height,
-    viewportWidth,
-  ]); // Add viewportWidth to dependencies
+    viewportWidth, // Ensure viewportWidth changes trigger effect updates
+  ]);
 
   return (
     <div
@@ -323,7 +391,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
   );
 };
 
-// Wrap the component with React.memo for performance optimization
+// Memoize the component to prevent unnecessary re-renders if props haven't changed
 const GLBViewer = React.memo(GLBViewerComponent);
 
 export default GLBViewer;
