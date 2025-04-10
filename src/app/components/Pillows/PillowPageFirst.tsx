@@ -32,7 +32,7 @@ export default function PillowPageFirst() {
     if (viewportWidth === 0) {
       return { x: 1.6, y: 0, z: 0 };
     }
-    if (viewportWidth >= 768) {
+    if (viewportWidth >= 1024) {
       return {
         x: 0,
         y: 1.5,
@@ -48,9 +48,6 @@ export default function PillowPageFirst() {
 
   return (
     <div className="h-full w-full bg-black font-cinzel text-white relative overflow-hidden">
-      <div className="absolute left-1/2 bottom-[0vh] -translate-x-1/2 w-[140%] h-[10vh] bg-[#808FFF80] rounded-[50%] z-0 blur-[70px]"></div>
-      <div className="absolute left-1/2 bottom-[-2.5vh] -translate-x-1/2 w-[120%] h-[5vh] bg-[#EB7BFFBF] rounded-[50%] z-0 blur-[40px]"></div>
-
       <NotchedBorder className="h-full w-full" size="large">
         <div
           className="absolute top-0 left-0 right-0 h-1/3 z-0"
@@ -60,6 +57,17 @@ export default function PillowPageFirst() {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundBlendMode: "overlay",
+          }}
+        ></div>
+
+        {/* Gradient Background */}
+        <div
+          className="absolute bottom-[-55.5vh] left-0 right-0 h-full z-0 blur-md opacity-90"
+          style={{
+            backgroundImage: "url('/Gradient.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "bottom center",
+            backgroundRepeat: "no-repeat",
           }}
         ></div>
 
