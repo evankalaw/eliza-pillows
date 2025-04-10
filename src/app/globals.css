@@ -51,6 +51,12 @@ body {
 }
 
 /* Border sizes */
+
+.border-xsmall {
+  grid-template-columns: 10px 1fr 10px;
+  grid-template-rows: 10px 1fr 10px;
+}
+
 .border-small {
   grid-template-columns: 15px 1fr 15px;
   grid-template-rows: 15px 1fr 15px;

@@ -47,7 +47,7 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     // If background is meant to be transparent, scene.background remains null (default)
 
     const camera = new THREE.PerspectiveCamera(
-      60, // Narrower FOV for tighter framing
+      50, // Narrower FOV for tighter framing
       currentMount.clientWidth / currentMount.clientHeight,
       0.1,
       1000

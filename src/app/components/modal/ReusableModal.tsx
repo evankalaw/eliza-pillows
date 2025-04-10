@@ -80,8 +80,7 @@ export default function ReusableModal({
 
       {/* Close Button - apply transition too */}
       <div
-        className={`cursor-pointer border-1 transition-all duration-300 ease-out hover:bg-white hover:text-black border-white p-2 bg-black relative z-20 mt-4 ${
-          isVisible ? "opacity-100" : "opacity-0"
+        className={`cursor-pointer border-1 transition-all hover:bg-[rgba(255,255,255,0.4)] duration-300 ease-out border-white p-2 bg-transparent relative z-20 mt-4
         } w-10 h-10 flex items-center justify-center`}
         onClick={onClose}
       >
