@@ -63,28 +63,27 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
     renderer.setPixelRatio(window.devicePixelRatio);
     // Use SRGBColorSpace for accurate color representation
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
+    renderer.shadowMap.enabled = false; // Disable shadows
     // Use ACES Filmic tone mapping for better contrast and a cinematic look
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1; // Adjust exposure if needed
     currentMount.appendChild(renderer.domElement);
 
     // Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.02); // Low ambient light to emphasize spotlight
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increased ambient light intensity
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.05); // Subtle directional light for fill
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Increased directional light intensity
     directionalLight.position.set(0, 1, 1);
     scene.add(directionalLight);
 
     // Spotlight to highlight the model
-    const spotlight = new THREE.SpotLight(0xffffff, 120); // High intensity for dramatic effect
+    const spotlight = new THREE.SpotLight(0xffffff, 500); // Significantly increased spotlight intensity
     spotlight.position.set(3, 5, 4); // Initial position, updated dynamically based on camera
     spotlight.angle = Math.PI / 15; // Narrow cone
     spotlight.penumbra = 0.3; // Soft edge
     spotlight.decay = 2.5; // Realistic light falloff
-    spotlight.castShadow = true;
+    // spotlight.castShadow = true; // Disable spotlight shadow casting
     // Configure shadow map properties
     spotlight.shadow.mapSize.width = 1024;
     spotlight.shadow.mapSize.height = 1024;
@@ -126,15 +125,16 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
-        // Center the model in the scene, slightly raised
+        // Center the model in the scene
         modelScene.position.x = -center.x;
-        modelScene.position.y = -center.y + 0.25;
+        // Adjust Y position based on viewport width to compensate for rotation change
+        modelScene.position.y = -center.y + (viewportWidth >= 1100 ? 0.15 : 0);
         modelScene.position.z = -center.z;
 
         // Ensure all meshes within the model cast shadows
         modelScene.traverse((node) => {
           if (node instanceof THREE.Mesh) {
-            node.castShadow = true;
+            // node.castShadow = true; // Disable mesh shadow casting
             // Optionally, enable receiveShadow if the model should have shadows cast onto it
             // node.receiveShadow = true;
           }
@@ -151,10 +151,10 @@ const GLBViewerComponent: React.FC<GLBViewerProps> = ({
         const cameraDistance = maxDim / (2 * Math.tan(fov / 2));
 
         // Position camera closer on smaller viewports for better visibility
-        // Use a smaller multiplier for mobile (< 1024px) to make the model appear larger relative to the viewport
-        // Use a larger multiplier for desktop (>= 1024px)
+        // Use a smaller multiplier for mobile (< 1100) to make the model appear larger relative to the viewport
+        // Use a larger multiplier for desktop (>= 1100px)
         const distanceMultiplier =
-          viewportWidth > 0 && viewportWidth < 1024 ? 1.4 : 1.0;
+          viewportWidth > 0 && viewportWidth < 1100 ? 1.4 : 1.0;
         camera.position.z = cameraDistance * distanceMultiplier;
         controls.update(); // Apply camera changes
 

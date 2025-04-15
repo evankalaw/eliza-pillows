@@ -2,12 +2,10 @@
 
 import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
-import JoinWaitlistModal from "./modal/JoinWaitlistModal";
 import { NotchedBorder } from "../borders/NotchedBorder";
+import JoinWaitlistModal from "./modal/JoinWaitlistModal";
 import GLBViewer from "./3d/GLBViewer";
 import HexagonButton from "../HexagonButton";
-// import GLBViewer from "./GLBViewer"; // Assuming this component exists - COMMENTED OUT
-// import HexagonButton from "../button/HexagonButton"; // Adjusted path - COMMENTED OUT
 
 const useViewport = () => {
   const [width, setWidth] = useState(0);
@@ -24,15 +22,12 @@ const useViewport = () => {
   return width;
 };
 
-export default function PillowPageFirst() {
+export default function BodyPillowAd() {
   const [modalOpen, setModalOpen] = useState(false);
   const viewportWidth = useViewport();
 
   const initialRotation = useMemo(() => {
-    if (viewportWidth === 0) {
-      return { x: 1.6, y: 0, z: 0 };
-    }
-    if (viewportWidth >= 1024) {
+    if (viewportWidth >= 1100) {
       return {
         x: 0,
         y: 1.5,
@@ -56,13 +51,13 @@ export default function PillowPageFirst() {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            backgroundAttachment: "fixed",
             backgroundBlendMode: "overlay",
           }}
         ></div>
 
-        {/* Gradient Background */}
         <div
-          className="absolute bottom-[-55.5vh] left-0 right-0 h-full z-0 blur-md opacity-90"
+          className="absolute bottom-[-55.5vh] left-0 right-0 h-full z-0 opacity-90"
           style={{
             backgroundImage: "url('/Gradient.png')",
             backgroundSize: "cover",
@@ -71,7 +66,19 @@ export default function PillowPageFirst() {
           }}
         ></div>
 
-        <div className="flex flex-col h-full w-full py-12 z-10 relative text-center">
+        <div className="absolute inset-0 z-0">
+          <GLBViewer
+            modelPath={"/BodyPillow2.glb"}
+            width="100%"
+            height="100%"
+            backgroundColor="transparent"
+            autoRotate={true}
+            initialRotation={initialRotation}
+            viewportWidth={viewportWidth}
+          />
+        </div>
+
+        <div className="absolute inset-0 flex flex-col justify-between h-full w-full py-12 z-10 text-center">
           <div className="flex flex-col items-center justify-start relative gap-4 px-4 pt-4 pb-4">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[15vh] bg-[#808FFF80] rounded-[50%] opacity-30  z-[-1] blur-[40px]"></div>
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[5vh] bg-[#EB7BFFBF] rounded-[50%] opacity-30  z-[-1] blur-[40px]"></div>
@@ -96,39 +103,17 @@ export default function PillowPageFirst() {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center relative min-h-[200px]">
-            <div
-              className="relative mx-auto w-full max-w-xl lg:max-w-full h-full flex justify-center items-center"
-              style={{
-                overflow: "hidden",
-              }}
-            >
-              {/* Assuming GLBViewer component exists */}
-
-              <GLBViewer
-                modelPath={"/BodyPillow.glb"} // Assuming BodyPillow.glb is in /public
-                width="100%"
-                height="100%"
-                backgroundColor="transparent"
-                initialRotation={initialRotation}
-                viewportWidth={viewportWidth}
-              />
-
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                {/* Disable pointer events on overlay */}
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-[clamp(30px,4vw,50px)]">🤑</div>
-                  <HexagonButton
-                    className="text-white uppercase text-[clamp(16px,2vw,24px)]"
-                    onClick={() => {
-                      setModalOpen(true);
-                    }}
-                  >
-                    Join Waitli$t
-                  </HexagonButton>
-                </div>
-              </div>
+          <div className="flex flex-col items-center justify-center relative min-h-[200px]">
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="text-[clamp(30px,4vw,50px)]">🤑</div>
+              <HexagonButton
+                className="text-white uppercase text-[clamp(16px,2vw,24px)]"
+                onClick={() => {
+                  setModalOpen(true);
+                }}
+              >
+                Join Waitli$t
+              </HexagonButton>
             </div>
           </div>
 
