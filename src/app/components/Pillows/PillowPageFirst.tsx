@@ -127,18 +127,25 @@ export default function BodyPillowAd() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <Image
-                src="/StudiosPresents.png"
-                alt="Studios Presents"
-                width={160}
-                height={80}
-                className="mx-auto w-auto h-[40px] md:h-[60px]"
-                quality={100}
-                unoptimized={true}
-              />
-              <div className="uppercase text-[clamp(10px,1.2vw,12px)] tracking-[.2em]">
-                PRESENTS
-              </div>
+              <a
+                href="https://elizastudios.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-all duration-300 ease-in-out hover:brightness-150 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] flex flex-col items-center gap-2"
+              >
+                <Image
+                  src="/StudiosPresents.png"
+                  alt="Studios Presents"
+                  width={160}
+                  height={80}
+                  className="mx-auto w-auto h-[40px] md:h-[60px]"
+                  quality={100}
+                  unoptimized={true}
+                />
+                <div className="uppercase text-[clamp(10px,1.2vw,12px)] tracking-[.2em]">
+                  PRESENTS
+                </div>
+              </a>
             </div>
           </div>
         </div>
