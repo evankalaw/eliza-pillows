@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://elizastudios.ai"),
+  metadataBase: new URL("https://elizasleepswithyou.com"),
   title: "SLEEP WITH ELIZA",
   description:
     "The Sleeper Agent body pillow that lures you in and hacks your dreams. Rare drop. No regrets.",
